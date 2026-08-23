@@ -1,0 +1,5 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "terminal-block") (type "KiCad") (uri "${KIPRJMOD}/terminal-block.pretty") (options "") (descr ""))
+	(lib (name "alternate-footprints") (type "KiCad") (uri "${KIPRJMOD}/alternate-footprints.pretty") (options "") (descr ""))
+)
