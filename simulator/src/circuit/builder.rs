@@ -98,6 +98,12 @@ impl CircuitBuilder {
         self.joins.push(Join { input, output });
     }
 
+    pub fn join_bus<const N: usize>(&mut self, inputs: [Node; N], outputs: [Node; N]) {
+        for i in 0..N {
+            self.join(inputs[i], outputs[i]);
+        }
+    }
+
     pub fn pullup(&mut self, node: Node) {
         if self.pullups.contains(&node) {
             let name = &self.nodes[node.0].name;
