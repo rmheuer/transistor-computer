@@ -1,0 +1,9 @@
+[package]
+name = "logic-unit-permutations"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+int-enum = "1.2.0"
+itertools = "0.15.0"
+priority-queue = "2.7.0"
