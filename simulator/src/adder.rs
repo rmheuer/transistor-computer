@@ -31,6 +31,7 @@ fn make_bit(builder: &mut CircuitBuilder) -> Bit {
     builder.join(xnor2.output, bit.sum_out_inv);
     builder.transistor(bit.input_a, bit.carry_in_inv, bit.carry_out);
     builder.transistor(bit.input_b, xnor1.output, bit.carry_out);
+    builder.pullup(bit.carry_out);
 
     bit
 }

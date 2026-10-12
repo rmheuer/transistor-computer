@@ -1,4 +1,7 @@
-use crate::circuit::{CircuitSim, NodeId};
+use crate::circuit::{
+    logic_sim::{CircuitSim, NodeState},
+    NodeId,
+};
 use eframe::egui;
 
 pub struct NodeHandle<'a> {
@@ -35,9 +38,14 @@ impl eframe::App for SimApplication<'_> {
 
             for _ in 0..1 {
                 for (index, input) in self.config.inputs.into_iter().enumerate() {
-                    self.config
-                        .sim
-                        .set_node_state(input.node_id, self.input_states[index]);
+                    self.config.sim.set_node_state(
+                        input.node_id,
+                        if self.input_states[index] {
+                            NodeState::High
+                        } else {
+                            NodeState::Low
+                        },
+                    );
                 }
                 self.config.sim.step();
             }

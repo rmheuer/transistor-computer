@@ -15,6 +15,7 @@ fn make_gate1(builder: &mut CircuitBuilder) -> Gate1 {
 pub fn not(builder: &mut CircuitBuilder) -> Gate1 {
     let gate = make_gate1(builder);
     builder.transistor(builder.gnd(), gate.input, gate.output);
+    builder.pullup(gate.output);
     gate
 }
 
@@ -36,5 +37,6 @@ pub fn xnor(builder: &mut CircuitBuilder) -> Gate2 {
     let gate = make_gate2(builder);
     builder.transistor(gate.input_a, gate.input_b, gate.output);
     builder.transistor(gate.input_b, gate.input_a, gate.output);
+    builder.pullup(gate.output);
     gate
 }

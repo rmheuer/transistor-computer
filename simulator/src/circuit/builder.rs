@@ -1,3 +1,5 @@
+use bit_vec::BitVec;
+
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Node(usize);
 
@@ -43,6 +45,7 @@ pub struct CircuitBuilder {
     nodes: Vec<NodeInfo>,
     transistors: Vec<Transistor>,
     joins: Vec<Join>,
+    pullups: Vec<Node>,
     gnd_node: Node,
 
     path_prefix: String,
@@ -58,6 +61,7 @@ impl CircuitBuilder {
             }],
             transistors: Vec::new(),
             joins: Vec::new(),
+            pullups: Vec::new(),
             gnd_node: Node(0),
 
             path_prefix: "".into(),
@@ -92,6 +96,14 @@ impl CircuitBuilder {
 
     pub fn join(&mut self, input: Node, output: Node) {
         self.joins.push(Join { input, output });
+    }
+
+    pub fn pullup(&mut self, node: Node) {
+        if self.pullups.contains(&node) {
+            let name = &self.nodes[node.0].name;
+            eprintln!("Duplicate pullup on node: {name}");
+        }
+        self.pullups.push(node);
     }
 
     pub fn subcircuit<T>(&mut self, name: &str, f: &impl Fn(&mut Self) -> T) -> T {
@@ -176,9 +188,20 @@ impl CircuitBuilder {
             })
             .collect();
 
+        let mut pullups = BitVec::with_capacity(infos.len());
+        pullups.grow(infos.len(), false);
+        for pullup in self.pullups {
+            let id = node_map.get_node_id(pullup);
+            if pullups[id.0] {
+                let name = &node_names[id.0];
+                eprintln!("Duplicate pullup on joined node: {name}");
+            }
+            pullups.set(id.0, true);
+        }
+
         (
             super::Circuit {
-                node_count: node_names.len(),
+                pullups,
                 gnd_node: node_map.get_node_id(self.gnd_node),
                 transistors,
             },

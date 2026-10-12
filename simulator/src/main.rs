@@ -33,7 +33,7 @@ fn main() -> eframe::Result {
     let outputs = [&adder.sum_out_inv[..], &[adder.carry_out][..]].concat();
 
     let (circuit, node_map, node_names) = builder.build();
-    let sim = circuit::CircuitSim::new(&circuit);
+    let sim = circuit::logic_sim::CircuitSim::new(&circuit);
     gui::run_ui(gui::SimConfig {
         sim,
         inputs: &make_handles(inputs, &node_map, &node_names),
